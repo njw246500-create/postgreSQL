@@ -347,9 +347,9 @@ select TO_char(NOW(),'YYYY') as 년도4자리
 	  ,TO_CHAR(NOW(),'MM') as 월
 	  ,TO_CHAR(NOW(),'DD') as 일
 	  ,TO_CHAr(NOW(),'DAY') as 요일 --day 이면 소문자로 요일, DAY 이면 대문자로 요일
-	  ,TO_CHAR(now(), 'HH') as 시
+	  ,TO_CHAR(now(),'HH') as 시
 	  ,TO_CHAr(NOW(),'MI') as 분
-	  ,TO_CHAR(now(), 'SS') as 초;
+	  ,TO_CHAR(now(),'SS') as 초;
 
 -- 시간
 select to_char(now(),'AM HH:MI:SS'); -- AM or PM 어떤것들 쓰던 상관없음
@@ -358,7 +358,7 @@ select to_char(now(),'HH24:MI:SS'); -- 24시간제, AM or PM 없이
 
 -- 날짜
 select to_char(now(), 'YYYY-MM-DD DAY');
-select to_char(now(), 'YYYY"년" MM"월" DD"일" DAY');
+select to_char(now(), 'YYYY"년" MM"월" DD"일" DAY'); -- 안에 들어가는 데이터는 작은따옴표! 안에 글자는 큰따옴표
 
 -- EMPLOYEE에서 사원명, 입사일(형식 25-10-28) 조회
 select EMP_NAME, to_char(HIRE_DATE, 'YY-MM-DD') 입사일
@@ -380,7 +380,7 @@ from EMPLOYEE;
  * 
  */
 select TO_DATE('261028', 'YYYYMMDD');
-select TO_DATE('261028 152850','YYMMDD HH24MISS');
+select TO_DATE('261028 152850','YYMMDD HH24MISS'); --HH24는 형식을 의미함. 
 	-- TO_DATE() 함수의 특성상 시간정보는 버려짐. 년월일만 출력
 select TO_DATE(20261028::TEXT, 'YYYYMMDD');
 
@@ -407,7 +407,7 @@ select TO_NUMBER('1,000,000', '999,999,999') + TO_NUMBER('550000','999,999,999')
 select '1000000'::INTEGER + '550000'::INTEGER;
 
 --======================================================================================================================
- --                                                     <NULL 처리 함수> 
+ --                                                <NULL 처리 함수> 
 --=======================================================================================================================
 /*
  *COALESCE(컬럼, 해당컬럼값이 NULL일때 반환할 값) 
