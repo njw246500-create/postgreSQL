@@ -44,7 +44,7 @@ order by 1;
 select case when SUBSTR(EMP_NO, 8, 1) in('1','3') then '남' 
 			when SUBSTR(EMP_NO, 8, 1) in('2','4') then '여'
 	    end as 성별
-	  , COUNT(*) as 사원수
+	  , COUNT(*) as 사원수 -- case when 안붙이면 체크형식으로만 나옴.
 from EMPLOYEE
 group by 성별
 order by 성별;
@@ -168,7 +168,7 @@ order by DEPT_CODE, job_CODE nulls last;
  * - EXCEPT : 차집합
  * 
 */
------------------------------------------------------------- 1. UNION
+-------------------------------------------------- 1. UNION
 -- 부서코드가 D5인 사원 또는 급여가 300만원 초과인 사원의 사번, 사원명, 부서코드, 급여 조회
 -- 부서코드가 D5인 사원 
 select EMP_ID, EMP_NAME, DEPT_CODE, SALARY
