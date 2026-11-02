@@ -22,7 +22,7 @@ where DEPT_CODE = (select DEPT_CODE
 					from EMPLOYEE 
 					where emp_name = '박서준');
 
--- 전 직웑의 평균급여보다 더 많은 급여를 받는 사원들의 사번, 사원명, 급여를 조회
+-- 전 직원의 평균급여보다 더 많은 급여를 받는 사원들의 사번, 사원명, 급여를 조회
 -- 1. 평균 급여
 select AVG(SALARY)
 from employee; --3047663 
@@ -63,7 +63,7 @@ where salary > (select AVG(SALARY)
 select emp_name, job_code, salary
 from employee 
 where salary < (select avg(salary)
-                 from employee )
+                 from employee)
 order by salary; 
 
 --2) 최저급여를 받는 사원의 사번, 사원명, 급여, 입사일 조회
@@ -122,10 +122,10 @@ select dept_code, sum(salary)
 from employee 
 group by dept_code 
 having sum(salary) = (select sum(salary)
-from employee
-group by dept_CODE 
-order by sum(salary) desc
-limit 1 );		
+						from employee
+						group by dept_CODE 
+						order by sum(salary) desc
+						limit 1 );		
 
 -----------------------------------------------------------------------------------------------------------------------------
 
@@ -309,6 +309,11 @@ from employee
 where salary*coalesce(1+BONUS, 1)*12 >= 30000000;
 
 -- WHERE 절에 별칭을 사용하려면 INLINE VIEW 사용
+select *
+from (select emp_id, emp_name, salary*coalesce(1+BONUS, 1)*12 연봉,dept_code
+        from employee) E
+where 연봉 >= 40000000;
+
 select EMP_NAME, E. 연봉
 from (select emp_id, emp_name, salary*coalesce(1+BONUS, 1)*12 연봉,dept_code
         from employee) E
@@ -332,7 +337,7 @@ with TOPN_SAL1 as (select DEPT_CODE, round(AVG(SALARY)) 평균급여
 				    from employee 
 				    group by dept_code 
 				    order by 2 desc)
-select * 
+select * -- inline view 선언한거 이외에는 사용불가! 
 from TOPN_SAL1 
 limit 2;
 				    
@@ -384,7 +389,7 @@ where 순위 <= 5;
  * ---------------------------------------------------------------------
  * 상위 5개                   LIMIT 5
  * 상위 3개                   LIMIT 3
- * 상위 6~10위                LIMIT 5 OFFSET 5 
+ * 상위 6~10위                LIMIT 5 OFFSET 5 - 1부터5는 offset 
  * 결과에 순번 출력             ROW_NUMBER() OVER(정렬기준)
  * 표준 SQL 상위 5개           FETCH FIRST 5 ROWS ONLY
  * 
@@ -419,7 +424,7 @@ limit 3;
 select emp_name, salary
 from employee 
 order by salary desc
-limit 4 offset 5; 
+limit 3 offset 5; 
 
 ---------------------- INLINE 
 

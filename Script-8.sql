@@ -1,5 +1,5 @@
 /*
-<JOIN>
+<JOIN> -> 중복된것을 없애기 위해서 데이터를 최소화 해서 보통 만든다. 
 두개 이상의 테이블에서 데이터를 조회하고자 할 때 사용하는 구문
 조회결과는 하나의 결과물(RESULT SET)로 나옴
 
@@ -16,7 +16,7 @@
    - 전체 외부 조인(FULL OUTER JOIN / FULL JOIN)
 3. 비등가조인(NON -EQUAL JOIN) => JOIN ON ( 동등 '=' 비교가 아닌 조인)
 4. 자체 조인 (SELF JOIN) => JOIN ON (같은 테이블끼리 조인)
-5. 교차 조인 (CROSS JOIN) => 모든 경우의 수 / 카테시안 곱 
+5. 교차 조인 (CROSS JOIN) => 모든 경우의 수 / 카테시안 곱 / 곱집합 
 
 */
 
@@ -65,7 +65,7 @@ join JOB USING(JOB_CODE);
 select EMP_ID, EMP_NAME, JOB_CODE, JOB_NAME
 from employee
 natural join JOB;
-
+-- 같은 컬럼이 여러 테이블에 나오면 안됨 딱 두개 테이블만 나와야지, 여러군데 나오면 설계를 잘못한것임. 
 
 -------------------------------------------------------------------------------------------------------
 -- 4) 조인과 함꼐 조건 제시 
@@ -164,7 +164,7 @@ where MANAGER_ID is not null;
 
 -- 사수가 있는 사원의 사번, 이름, 부서코드와 사수의 사번, 이름, 부서코드 조회
 select E.EMP_ID, E.EMP_NAME, E.DEPT_CODE,
-			 M.EMP_ID, M.EMP_NAME, M.DEPT_CODE	
+	   M.EMP_ID, M.EMP_NAME, M.DEPT_CODE	
 from employee E, employee M
 where E.MANAGER_ID = M.EMP_ID;
 
