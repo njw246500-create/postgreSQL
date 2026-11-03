@@ -305,7 +305,7 @@ create table mem_check3(
 
 create table MEM_PRIKEY(
     MEM_NO numeric constraint memno_pk primary key, 
-    mem_id varchar(20) not null unique,
+    mem_id varchar(20) not null unique, -- primary key 또 못씀
     mem_pwd varchar(20) not null,
     mem_name varchar(20) not null, 
     gender char(1) check(gender in ('남','여')), 
@@ -498,9 +498,9 @@ insert into member5 (mem_no, mem_name) values (4, '최길동');
 <subquerry>를 이용한 테이블 생성
 테이블을 복사하는 개념
 
-[표현식]
-create table 테이블명
-AS 서브쿼리;
+  [표현식]
+  create table 테이블명
+  AS 서브쿼리;
 
  */ 
 -- EMPLOYEE 테이블의 컬럼명, 자료형, 데이터 복사 
