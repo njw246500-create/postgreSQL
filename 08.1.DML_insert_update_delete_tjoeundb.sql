@@ -268,13 +268,6 @@ select * from emp_salary;
 
 rollback;
 
-
-
-
-
-
-
-
-
-
-
+truncate table emp_01;
+rollback;
+select * from emp_01;
