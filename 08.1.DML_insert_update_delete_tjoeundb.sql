@@ -36,7 +36,7 @@ values ('이티어', 303, 'J5', CURRENT_DATE, '051111-4123456');
 
 insert into employee_copy(EMP_ID, EMP_NAME, EMP_NO, HIRE_DATE)
 values (302, '황반가', '040111-4567845',CURRENT_DATE);
--- 오류 NOT NULL인 JOB_CODE를 안넣어서
+-- 오류 NOT NULL인 JOB_CODE를 안넣어서(예외 : DEFAULT가 있는 경우)
 
 -------------------------------------------------------------------------------------
 /*
@@ -89,20 +89,21 @@ with DATA_INFO as (
 	select EMP_ID, EMP_NAME, DEPT_CODE, HIRE_DATE, MANAGER_ID
 	from employee 
 	where dept_code = 'D1' 
-),
+), -- 테이블처럼 사용하는것
 INFO1 as (
 	insert into emp_DEPT (EMP_ID, EMP_NAME, DEPT_CODE, HIRE_DATE)
 	select EMP_ID, EMP_NAME, DEPT_CODE, HIRE_DATE
-	  from DATA_INFO )
+	  from DATA_INFO ) --- 사용하려는게 아니고 데이터를 넣으려고 하는것, 그냥 액션을 명명한거잖아 
+	  
 insert into emp_manager (emp_ID, EMP_NAME, MANAGER_ID)
-	select emp_ID, EMP_NAME, MANAGER_ID -- commit 을 한 것임. 
-	  from DATA_INFO ;	  
+	select emp_ID, EMP_NAME, MANAGER_ID 
+	  from DATA_INFO ;	  -- commit 을 한 것임. 
 /* 테이블이 더 있으면 아래와 같이 계속 넣어주면 됨
 INFO2 as (
    insert into emp_ETC ( EMP_ID, EMP_NAME, DEPT_CODE)
    select EMP_ID< EMP_NAME, DEPT_CODE
    	 from DATA_INFO
-)
+) 
 with 문 다음에는 반드시 select 가 와야함. 
 10개 테이블에 각각 여러 정보를 넣을때 사용.  
 note) framework : 문법이 정해져 있어서 정해진것을 따르는것 ex sql
