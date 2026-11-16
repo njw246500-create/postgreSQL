@@ -190,7 +190,155 @@ rollback;
 -- 3) 산술식 또는 함수식으로 정의 되어있는 경우
  drop view vw_emp_SAL; 
 
-create 
+create view VW_EMP_SAL;
+as select EMP_ID, EMP_NAME, EMP_NA, JOB_CODE, SALARY, SALARY*12 as 연봉
+		from EMPLOYEE; 
+
+select * from VW_EMP_SAL;
+select EMP_NAME, SALARY from EMPLOYEE; 
+
+-- INSERT(연봉(산술식)이 기존테이블에 없어서 오류)
+insert into VW_EMP_SAL
+VALUES('400', '김상진', '123456-1234567', 'J5', 3000000, 36000000);
+
+--  UPDATE(연봉이 기존테이블에 없어서 오류)
+update VW_EMP_SAL
+set 연봉 = 8000000
+where EMP_ID = '200'; 
+
+begin;
+-- UPDATE(급여를 UPDATE는 가능)
+update VW_EMP_SAL
+set SALARY = 9000000
+where EMP_ID = '200';
+
+select * from VW_EMP_SAL order by EMP_ID; 
+select * from EMPLOYEE order by EMP_ID; 
+
+-- DELETE
+delect from VW_EMP_SAL
+where 연봉 = 72000000;
+
+rollback; 
+
+-- 4) 그룹함수나 GROUP BY 절에 포함되어 있는 경우
+-- 별칭부여(컬럼명)는 뷰명 옆에 넣어서도 가능
+create view VW_GROUPDEPT (부서명, 합계, 평균)
+as select DEPT_CODE, SUM(SALARY), CEIL(AVG(SALARY))
+		from employee
+		group by DEPT_CODE; 
+
+select * from VW_GROUPDEPT; 
+select * from EMPLOYEE; 
+
+-- INSERT(오류)
+insert into VW_GROUPDEPT VALUES('D3',8000000, 4000000)
+
+-- UPDATE(오류)
+update vw_groupdept
+   set 합계 = 5000000
+where 부서명 - 'D1'; 
+
+-- DELETE(오류)
+delete from vw_groupdept
+where 합계 = 5210000;
+
+-- 5) DISTINCT 구문이 포함 되어 있는 경우
+create view vw_emp_job 
+as select distinct job_code
+			from EMPLOYEE; 
+
+select * from VW_EMP_JOB; 
+
+-- INSERT(에러)
+update vw_emp_job
+set job_Code = 'J8'
+where JOB_CODE = 'J7';
+
+-- DELETE(에러)
+delete from vw_emp_job 
+where job_CODE = 'J1';
+
+-- 6) JOIN을 이용하여 여러 테이블을 연결시켜놓은 경우 
+create view VW_JOIN
+as select EMP_ID, EMP_NAME< DEPT_TITLE
+		from employee 
+		join DEPARTMENT on (DEPT_CODE = DEPT_ID)
+		
+select * from VW_JOIN;
+
+-- INSERT(에러)
+insert into VW_JOIN VALUES('300','황미혜','총무부');
+
+-- UPDATE(에러)
+update vw_join 
+set EMP_NAME = '박새롬'
+where EMP_ID = '200'; 
+
+-- UPDATE(에러)
+update VW_JOIN
+set dept_TITLe = '인사관리부'; 
+where emp_id = '200';
+
+-- DELETE(에러)
+delete from VW_JOIN
+where emp_id = '200';
+
+-------------------------------------------------------------------------
+/*
+ * VIEW 옵션
+	
+		[표현식]
+		CREATE [OR REPLACE] VIEW 뷰명 
+		AS 서브쿼리
+		[WITH CHECK OPTION];
+		
+		1) OR REPLACE : 기존에 동일한 뷰가 있을 경우 덮어쓰기, 동일한 뷰가 없을 경우 새로 생성
+									(기존의 뷰의 컬럼의 순서와 컬럼명은 덮어쓰기 할 수 없음. 삭제 후 새로 생성)
+		
+		2) WITH CHECK OPTION : DML의 서버쿼리에 기술된 조건에 부합한 값으로만 DML을 가능하도록 함.
+		
+ */
+-- WITH CHECK OPTION 안쓰고 생성
+create view vw_emp
+as select * 
+		from employee 
+		where SALARY >= 30000000; 
+
+select * from vw_emp;
+
+begin;
+update vw_emp
+set SALARY = 20000000
+where EMP_ID = '209';
+
+select * from VW_EMP;
+
+rollback;
+
+-- WITH CHECK OPTION 사용하여 생성
+create or replace view vw_emp
+as select *
+		from employee
+		where SALARY >= 3000000
+with check option; 
+
+select * from VW_EMP;
+
+update vw_emp
+set SALARY = 2000000
+where EMP_ID = '209'; -- CHECK 옵션에 부합되지 않아 오류 
+
+update vw_emp
+set SALARY = 4000000
+where EMP_ID = '209'; -- 성공
+
+
+
+
+
+
+
 
 
 
